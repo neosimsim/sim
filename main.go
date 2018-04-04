@@ -5,16 +5,12 @@ import "fmt"
 // using string might be inefficient but should suffice for poc
 var buffer string
 
-type Range struct {
-	Start int
-	End int
+var file File = File{
+	Buffer: "Hallo Welt",
+	Dot:    Range{4, 8},
 }
 
-var dotRange Range = Range {3,4}
-
-func rangeContent(buffer string, r Range) string {
-	return buffer[r.Start:r.End]
-}
+var dotRange Range = Range{3, 4}
 
 func main() {
 	buffer = "Hallo Welt"
@@ -22,6 +18,5 @@ func main() {
 	fmt.Print(buffer[2:4])
 	fmt.Println("change:")
 	fmt.Print(buffer)
-	fmt.Print(rangeContent(buffer, dotRange))
+	fmt.Print(file.PrintDot())
 }
-

@@ -1,5 +1,16 @@
 package main
 
+type Range struct {
+	Start int
+	End   int
+}
+
+// A File an in memory copy of an external file, e.g. stored on disk.
+type File struct {
+	Buffer string
+	Dot    Range
+}
+
 // Text commands
 
 // Insert the text into the file after the range. Set
@@ -40,9 +51,9 @@ func t() {
 
 // Display commands
 
-
 // Print the text in the range.  Set dot.
-func p() {
+func (f *File) PrintDot() string {
+	return f.Buffer[f.Dot.Start:f.Dot.End]
 }
 
 // =    Print the line address and character address of the
@@ -204,4 +215,3 @@ func cd() {
 //    extended in either direction to line boundaries and
 //    printed.  If dot is thereby unchanged, it is set to
 //    .+1 and printed.
-
