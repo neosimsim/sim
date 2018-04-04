@@ -1,5 +1,9 @@
 package main
 
+import (
+	"strings"
+)
+
 type Range struct {
 	Start int
 	End   int
@@ -13,9 +17,12 @@ type File struct {
 
 // Text commands
 
-// Insert the text into the file after the range. Set
-// dot.
-func a() {
+// Insert the text into the file after the range.
+// Set dot.
+func (f *File) Append(text string) {
+	f.Buffer = strings.Join([]string{f.Buffer[:f.Dot.End], text, f.Buffer[f.Dot.End:]}, "")
+	f.Dot.Start = f.Dot.End
+	f.Dot.End = f.Dot.Start + len(text)
 }
 
 // Same as a, but c replaces the text, while i inserts
