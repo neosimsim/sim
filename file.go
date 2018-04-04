@@ -9,10 +9,11 @@ type Range struct {
 	End   int
 }
 
-// A File an in memory copy of an external file, e.g. stored on disk.
+// A File is an in memory copy of an external file, e.g. stored on disk.
 type File struct {
-	Buffer string
-	Dot    Range
+	Buffer   string
+	Range    Range
+	FileName string
 }
 
 // Text commands
@@ -20,9 +21,9 @@ type File struct {
 // Insert the text into the file after the range.
 // Set dot.
 func (f *File) Append(text string) {
-	f.Buffer = strings.Join([]string{f.Buffer[:f.Dot.End], text, f.Buffer[f.Dot.End:]}, "")
-	f.Dot.Start = f.Dot.End
-	f.Dot.End = f.Dot.Start + len(text)
+	f.Buffer = strings.Join([]string{f.Buffer[:f.Range.End], text, f.Buffer[f.Range.End:]}, "")
+	f.Range.Start = f.Range.End
+	f.Range.End = f.Range.Start + len(text)
 }
 
 // Same as a, but c replaces the text, while i inserts
@@ -60,7 +61,7 @@ func t() {
 
 // Print the text in the range.  Set dot.
 func (f *File) PrintDot() string {
-	return f.Buffer[f.Dot.Start:f.Dot.End]
+	return f.Buffer[f.Range.Start:f.Range.End]
 }
 
 // =    Print the line address and character address of the
