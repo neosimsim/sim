@@ -28,7 +28,9 @@ func (f *File) Append(text string) {
 
 // Same as a, but c replaces the text, while i inserts
 // before the range.
-func c() {
+func (f *File) Change(text string) {
+	f.Buffer = strings.Join([]string{f.Buffer[:f.Range.Start], text, f.Buffer[f.Range.End:]}, "")
+	f.Range.End = f.Range.Start + len(text)
 }
 
 // Delete the text in the range.
