@@ -42,9 +42,9 @@ func BenchmarkChange(b *testing.B) {
 	}
 }
 
-func TestDelete(t *testing.T) {
+func TestDeleteDot(t *testing.T) {
 	file := File{Buffer: "Hello World!\n", Range: Range{5, 11}}
-	file.Delete()
+	file.DeleteDot()
 
 	if file.Buffer != "Hello!\n" {
 		t.Error("Wrong deletion result. Expected ", "Hello!", " got ", file.Buffer)

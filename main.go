@@ -18,5 +18,5 @@ func main() {
 	fmt.Print(buffer[2:4])
 	fmt.Println("change:")
 	fmt.Print(buffer)
-	fmt.Print(file.PrintDot())
+	fmt.Print(file.Dot())
 }

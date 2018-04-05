@@ -14,6 +14,7 @@ type File struct {
 	Buffer   string
 	Range    Range
 	FileName string
+	Mark     Range
 }
 
 // Text commands
@@ -35,7 +36,7 @@ func (f *File) Change(text string) {
 
 // Delete the text in the range.
 // Set dot.
-func (f *File) Delete() {
+func (f *File) DeleteDot() {
 	f.Change("")
 }
 
@@ -49,21 +50,21 @@ func (f *File) Delete() {
 // n, as in s2/x/y/, the n-th match in the range is sub-
 // stituted.  If the command is followed by a g, as in
 // s/x/y/g, all matches in the range are substituted.
-func s() {
+func (f *File) Sub() {
 }
 
 // Move the range to after a1. Set dot.
-func m() {
+func (f *File) MoveDot() {
 }
 
 // Copy the range to after a1. Set dot.
-func t() {
+func (f *File) CopyDot() {
 }
 
 // Display commands
 
 // Print the text in the range.  Set dot.
-func (f *File) PrintDot() string {
+func (f *File) Dot() string {
 	return f.Buffer[f.Range.Start:f.Range.End]
 }
 
