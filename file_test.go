@@ -15,3 +15,10 @@ func TestAppend(t *testing.T) {
 		t.Error("Range not properly updated after appending")
 	}
 }
+
+func BenchmarkAppend(b *testing.B) {
+	file := File{Buffer: "Hello World!\n", Range: Range{2, 6}}
+	for i := 0; i < b.N; i++ {
+		file.Append("Big ")
+	}
+}
