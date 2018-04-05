@@ -35,7 +35,8 @@ func (f *File) Change(text string) {
 
 // Delete the text in the range.
 // Set dot.
-func d() {
+func (f *File) Delete() {
+	f.Change("")
 }
 
 // Substitute text for the first match to the regular
