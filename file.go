@@ -1,3 +1,7 @@
+// Copyright © 2018, Alexander Ben Nasrallah <me@abn.sh>
+// Use of this source code is governed by a BSD 3-clause
+// style license that can be found in the LICENSE file.
+
 package main
 
 import (
@@ -9,10 +13,10 @@ type Range struct {
 	End   int
 }
 
-// A File is an in memory copy of an external file, e.g. stored on disk.
+// A  File is an in memory copy of an external file, e.g. stored on disk.
 type File struct {
 	Buffer   string
-	Range    Range
+	Adress   Range
 	FileName string
 	Mark     Range
 }
@@ -22,16 +26,16 @@ type File struct {
 // Insert the text into the file after the range.
 // Set dot.
 func (f *File) Append(text string) {
-	f.Buffer = strings.Join([]string{f.Buffer[:f.Range.End], text, f.Buffer[f.Range.End:]}, "")
-	f.Range.Start = f.Range.End
-	f.Range.End = f.Range.Start + len(text)
+	f.Buffer = strings.Join([]string{f.Buffer[:f.Adress.End], text, f.Buffer[f.Adress.End:]}, "")
+	f.Adress.Start = f.Adress.End
+	f.Adress.End = f.Adress.Start + len(text)
 }
 
 // Same as a, but c replaces the text, while i inserts
 // before the range.
 func (f *File) Change(text string) {
-	f.Buffer = strings.Join([]string{f.Buffer[:f.Range.Start], text, f.Buffer[f.Range.End:]}, "")
-	f.Range.End = f.Range.Start + len(text)
+	f.Buffer = strings.Join([]string{f.Buffer[:f.Adress.Start], text, f.Buffer[f.Adress.End:]}, "")
+	f.Adress.End = f.Adress.Start + len(text)
 }
 
 // Delete the text in the range.
@@ -58,14 +62,14 @@ func (f *File) MoveDot() {
 }
 
 // Copy the range to after a1. Set dot.
-func (f *File) CopyDot() {
+func (f *File) CopyDot(address int) {
 }
 
 // Display commands
 
 // Print the text in the range.  Set dot.
 func (f *File) Dot() string {
-	return f.Buffer[f.Range.Start:f.Range.End]
+	return f.Buffer[f.Adress.Start:f.Adress.End]
 }
 
 // =    Print the line address and character address of the

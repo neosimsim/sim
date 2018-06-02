@@ -7,7 +7,7 @@ var buffer string
 
 var file File = File{
 	Buffer: "Hallo Welt",
-	Range:  Range{4, 8},
+	Adress: Range{4, 8},
 }
 
 var dotRange Range = Range{3, 4}

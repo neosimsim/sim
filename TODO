@@ -1,0 +1,3 @@
+- tests functions to cover sam command
+- tests sam command parsing: commands triggers proper function
+
