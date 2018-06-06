@@ -58,7 +58,7 @@ func (f *File) Sub() {
 }
 
 // Move the range to after a1. Set dot.
-func (f *File) MoveDot() {
+func (f *File) MoveDot(address int) {
 }
 
 // Copy the range to after a1. Set dot.
