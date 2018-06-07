@@ -77,6 +77,8 @@ How does tmux fits in?
 On my thought on acme I mentioned the integrating "plugin" support. The same can be achieved by tmux, which can
 be used by keyboard only.
 
+A tmux pane runs a sim viewer bound to a file in the sim file server, watching it's content.
+
 ## Roadmap
 
 ### v0.1
