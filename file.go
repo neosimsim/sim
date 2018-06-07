@@ -8,40 +8,60 @@ import (
 	"strings"
 )
 
-type Range struct {
+type Address struct {
 	Start int
 	End   int
 }
 
+type InvalidAddressError struct {
+	Addr Address
+}
+
+func NewInvalidAddressError(addr Address) (* InvalidAddressError) {
+	return &InvalidAddressError{Addr: addr}
+}
+
+func (*InvalidAddressError) Error() string {
+	return ""
+}
+
 // A  File is an in memory copy of an external file, e.g. stored on disk.
 type File struct {
-	Buffer   string
-	Adress   Range
 	FileName string
-	Mark     Range
+	clean	bool
+	buffer   string
+	dot      Address
+	mark     Address
 }
 
 // Text commands
 
 // Insert the text into the file after the range.
 // Set dot.
-func (f *File) Append(text string) {
-	f.Buffer = strings.Join([]string{f.Buffer[:f.Adress.End], text, f.Buffer[f.Adress.End:]}, "")
-	f.Adress.Start = f.Adress.End
-	f.Adress.End = f.Adress.Start + len(text)
+func (f *File) Append(text string, addr Address) error {
+	f.buffer = strings.Join([]string{f.buffer[:f.dot.End], text, f.buffer[f.dot.End:]}, "")
+	f.dot.Start = f.dot.End
+	f.dot.End = f.dot.Start + len(text)
+	return nil
 }
 
 // Same as a, but c replaces the text, while i inserts
 // before the range.
-func (f *File) Change(text string) {
-	f.Buffer = strings.Join([]string{f.Buffer[:f.Adress.Start], text, f.Buffer[f.Adress.End:]}, "")
-	f.Adress.End = f.Adress.Start + len(text)
+func (f *File) Change(text string, addr Address) error {
+	f.buffer = strings.Join([]string{f.buffer[:f.dot.Start], text, f.buffer[f.dot.End:]}, "")
+	f.dot.End = f.dot.Start + len(text)
+	return nil
+}
+
+func (f *File) Insert(text string, addr Address) error {
+	return nil
 }
 
 // Delete the text in the range.
 // Set dot.
-func (f *File) DeleteDot() {
-	f.Change("")
+func (f *File) Delete(addr Address) error {
+	f.Change("", addr)
+	return nil
 }
 
 // Substitute text for the first match to the regular
@@ -54,22 +74,25 @@ func (f *File) DeleteDot() {
 // n, as in s2/x/y/, the n-th match in the range is sub-
 // stituted.  If the command is followed by a g, as in
 // s/x/y/g, all matches in the range are substituted.
-func (f *File) Sub() {
+func (f *File) Substitue(regex, text string, addr Address) error {
+	return nil
 }
 
 // Move the range to after a1. Set dot.
-func (f *File) MoveDot(address int) {
+func (f *File) Move(a1, addr Address) error {
+	return nil
 }
 
 // Copy the range to after a1. Set dot.
-func (f *File) CopyDot(address int) {
+func (f *File) Copy(a1, addr Address) error {
+	return nil
 }
 
 // Display commands
 
 // Print the text in the range.  Set dot.
-func (f *File) Dot() string {
-	return f.Buffer[f.Adress.Start:f.Adress.End]
+func (f *File) Print(addr Address) (string, error) {
+	return f.buffer[f.dot.Start:f.dot.End], nil
 }
 
 // =    Print the line address and character address of the
@@ -78,7 +101,8 @@ func printStatus() {
 }
 
 //  =#   Print just the character address of the range.
-func printRange() {
+func printAddress() error {
+	return nil
 }
 
 // File commands
@@ -129,7 +153,7 @@ func r() {
 
 // Write the range (default 0,$) to the named external
 // file.
-func w() {
+func Write() {
 }
 
 // * f filename
@@ -231,3 +255,7 @@ func cd() {
 //    extended in either direction to line boundaries and
 //    printed.  If dot is thereby unchanged, it is set to
 //    .+1 and printed.
+func (f *File) SetMark(addr Address) error {
+	f.mark = addr
+	return nil
+}
