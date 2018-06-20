@@ -17,7 +17,7 @@ type InvalidAddressError struct {
 	Addr Address
 }
 
-func NewInvalidAddressError(addr Address) (* InvalidAddressError) {
+func NewInvalidAddressError(addr Address) *InvalidAddressError {
 	return &InvalidAddressError{Addr: addr}
 }
 
@@ -28,7 +28,7 @@ func (*InvalidAddressError) Error() string {
 // A  File is an in memory copy of an external file, e.g. stored on disk.
 type File struct {
 	FileName string
-	clean	bool
+	clean    bool
 	buffer   string
 	dot      Address
 	mark     Address
@@ -39,9 +39,19 @@ type File struct {
 // Insert the text into the file after the range.
 // Set dot.
 func (f *File) Append(text string, addr Address) error {
-	f.buffer = strings.Join([]string{f.buffer[:f.dot.End], text, f.buffer[f.dot.End:]}, "")
-	f.dot.Start = f.dot.End
+	if err := f.validateAddress(addr); err != nil {
+		return err
+	}
+	f.buffer = strings.Join([]string{f.buffer[:addr.End], text, f.buffer[addr.End:]}, "")
+	f.dot.Start = addr.End
 	f.dot.End = f.dot.Start + len(text)
+	return nil
+}
+
+func (f *File) validateAddress(addr Address) error {
+	if addr.Start < 0 || addr.End < 0 || addr.Start > addr.End || addr.Start > len(f.buffer) || addr.End > len(f.buffer) {
+		return &InvalidAddressError{addr}
+	}
 	return nil
 }
 
@@ -74,7 +84,7 @@ func (f *File) Delete(addr Address) error {
 // n, as in s2/x/y/, the n-th match in the range is sub-
 // stituted.  If the command is followed by a g, as in
 // s/x/y/g, all matches in the range are substituted.
-func (f *File) Substitue(regex, text string, addr Address) error {
+func (f *File) Substitute(regex, text string, addr Address) error {
 	return nil
 }
 
@@ -257,5 +267,17 @@ func cd() {
 //    .+1 and printed.
 func (f *File) SetMark(addr Address) error {
 	f.mark = addr
+	return nil
+}
+
+func (f *File) Pipe(cmd string, addr Address) error {
+	return nil
+}
+
+func (f *File) PipeIn(cmd string, addr Address) error {
+	return nil
+}
+
+func (f *File) PipeOut(cmd string, addr Address) error {
 	return nil
 }
