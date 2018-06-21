@@ -63,3 +63,42 @@ func TestErrorOnInvalidAddress(t *testing.T) {
 		t.Errorf("expected error of type *InvalidAddressError for Start > End got %T", err)
 	}
 }
+
+func TestGetText(t *testing.T) {
+	file := &File{buffer: "Hello World!", dot: Address{Start: 7, End: 11}}
+	text, err := file.GetText(Address{Start: 5, End: 9})
+
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+	}
+	if text != " Wor" {
+		t.Errorf("expected text '%s' got '%s'", " Wor", text)
+	}
+	if file.dot.Start != 7 || file.dot.End != 11 {
+		t.Errorf("expected dot to be unchanged #%d,#%d got #%d,#%d", 7, 11, file.dot.Start, file.dot.End)
+	}
+}
+
+func TestGetErrorOnInvalidAddress(t *testing.T) {
+	file := &File{buffer: "Hello World!", dot: Address{Start: 7, End: 11}}
+
+	_, err := file.GetText(Address{Start: -1, End: 8})
+	if _, ok := err.(*InvalidAddressError); !ok {
+		t.Errorf("expected error of type *InvalidAddressError for Start < 0 got %T", err)
+	}
+
+	_, err = file.GetText(Address{Start: 30, End: 40})
+	if _, ok := err.(*InvalidAddressError); !ok {
+		t.Errorf("expected error of type *InvalidAddressError for Start > len got %T", err)
+	}
+
+	_, err = file.GetText(Address{Start: 1, End: 40})
+	if _, ok := err.(*InvalidAddressError); !ok {
+		t.Errorf("expected error of type *InvalidAddressError for End > len got %T", err)
+	}
+
+	_, err = file.GetText(Address{Start: 8, End: 4})
+	if _, ok := err.(*InvalidAddressError); !ok {
+		t.Errorf("expected error of type *InvalidAddressError for Start > End got %T", err)
+	}
+}
