@@ -4,6 +4,7 @@ import (
 	"testing"
 	"strings"
 	"bufio"
+	"io"
 )
 
 func TestReadLineToDelim(t *testing.T) {
@@ -66,6 +67,15 @@ func TestBlock(t *testing.T) {
 	}
 }
 
+func TestBlockAtEOF(t *testing.T) {
+	reader := NewLangReader(strings.NewReader("new text\n.to\n."))
+	_, err := reader.ReadBlock()
+
+	if err != io.EOF {
+		t.Errorf("unexpected error %v", err)
+	}
+}
+
 func TestReadDelim(t *testing.T) {
 	reader := NewLangReader(strings.NewReader(`/new text to append/`))
 
@@ -122,3 +132,47 @@ func TestReadEolDelim(t *testing.T) {
 	}
 }
 
+func TestReadNumber(t *testing.T) {
+	bufReader := bufio.NewReader(strings.NewReader("232abc"))
+	reader := NewLangReader(bufReader)
+	number, err := reader.ReadNumber()
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	if number != 232 {
+		t.Errorf("unexpected number %d", number)
+	}
+	rest, _, err := bufReader.ReadRune()
+	if err != nil {
+		t.Fatalf("unexpected error reading rest %v", err)
+	}
+	if rest != 'a' {
+		t.Errorf("expected reader to have stopped after number: %v", string(rest))
+	}
+
+	reader = NewLangReader(strings.NewReader(""))
+	number, err = reader.ReadNumber()
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	if number != 0 {
+		t.Errorf("unexpected number %d", number)
+	}
+
+	bufReader = bufio.NewReader(strings.NewReader("abc"))
+	reader = NewLangReader(bufReader)
+	number, err = reader.ReadNumber()
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	if number != 0 {
+		t.Errorf("unexpected number %d", number)
+	}
+	rest, _, err = bufReader.ReadRune()
+	if err != nil {
+		t.Fatalf("unexpected error reading rest %v", err)
+	}
+	if rest != 'a' {
+		t.Errorf("expected reader to have stopped after number: %v", string(rest))
+	}
+}

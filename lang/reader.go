@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"errors"
 	"unicode"
+	"strconv"
 )
 
 var (
@@ -87,6 +88,22 @@ func (reader *LangReader) ReadWord() (string, error)	{
 	return "", nil
 }
 
-func ReadNumber(r io.Reader) (int, error) {
-	return 0, nil
+func (reader *LangReader) ReadNumber() (number int, err error) {
+	for true {
+		var nextRune rune
+		nextRune, _, err = reader.bufReader.ReadRune()
+		if err == io.EOF {
+			return number, nil
+		}
+		if ! unicode.IsDigit(nextRune) {
+			err = reader.bufReader.UnreadRune()
+			return
+		}
+		digit, _ := strconv.Atoi(string(nextRune))
+		number = number * 10 + digit
+	}
+	if err != nil && err != io.EOF {
+		return 0, err
+	}
+	return
 }
