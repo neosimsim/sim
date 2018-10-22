@@ -1,10 +1,10 @@
 package lang
 
 import (
-	"testing"
-	"strings"
 	"bufio"
 	"io"
+	"strings"
+	"testing"
 )
 
 func TestReadLineToDelim(t *testing.T) {
@@ -174,5 +174,50 @@ func TestReadNumber(t *testing.T) {
 	}
 	if rest != 'a' {
 		t.Errorf("expected reader to have stopped after number: %v", string(rest))
+	}
+}
+
+func TestReadWord(t *testing.T) {
+	bufReader := bufio.NewReader(strings.NewReader("cp/xxx"))
+	reader := NewLangReader(bufReader)
+	word, err := reader.ReadWord()
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	if word != "cp" {
+		t.Errorf("unexpected word '%s'", word)
+	}
+	rest, _, err := bufReader.ReadRune()
+	if err != nil {
+		t.Fatalf("unexpected error reading rest %v", err)
+	}
+	if rest != '/' {
+		t.Errorf("expected reader to have stopped after word: %v", string(rest))
+	}
+
+	reader = NewLangReader(strings.NewReader(""))
+	word, err = reader.ReadWord()
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	if word != "" {
+		t.Errorf("unexpected word '%s'", word)
+	}
+
+	bufReader = bufio.NewReader(strings.NewReader("123"))
+	reader = NewLangReader(bufReader)
+	word, err = reader.ReadWord()
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
+	}
+	if word != "" {
+		t.Errorf("unexpected word '%s'", word)
+	}
+	rest, _, err = bufReader.ReadRune()
+	if err != nil {
+		t.Fatalf("unexpected error reading rest %v", err)
+	}
+	if rest != '1' {
+		t.Errorf("expected reader to have stopped after word: '%s'", string(rest))
 	}
 }

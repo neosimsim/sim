@@ -2,15 +2,15 @@ package lang
 
 import (
 	"bufio"
-	"io"
-	"fmt"
 	"errors"
-	"unicode"
+	"fmt"
+	"io"
 	"strconv"
+	"unicode"
 )
 
 var (
-	EOL = errors.New("reached EOL")
+	EOL          = errors.New("reached EOL")
 	InvalidDelim = errors.New("invalid delim")
 )
 
@@ -84,8 +84,23 @@ func (reader *LangReader) ReadDelim() (rune, error) {
 	return delim, nil
 }
 
-func (reader *LangReader) ReadWord() (string, error)	{
-	return "", nil
+func (reader *LangReader) ReadWord() (word string, err error) {
+	for true {
+		var nextRune rune
+		nextRune, _, err = reader.bufReader.ReadRune()
+		if err == io.EOF {
+			return word, nil
+		}
+		if !unicode.IsLetter(nextRune) {
+			err = reader.bufReader.UnreadRune()
+			return
+		}
+		word += string(nextRune)
+	}
+	if err != nil && err != io.EOF {
+		return "", err
+	}
+	return
 }
 
 func (reader *LangReader) ReadNumber() (number int, err error) {
@@ -95,12 +110,12 @@ func (reader *LangReader) ReadNumber() (number int, err error) {
 		if err == io.EOF {
 			return number, nil
 		}
-		if ! unicode.IsDigit(nextRune) {
+		if !unicode.IsDigit(nextRune) {
 			err = reader.bufReader.UnreadRune()
 			return
 		}
 		digit, _ := strconv.Atoi(string(nextRune))
-		number = number * 10 + digit
+		number = number*10 + digit
 	}
 	if err != nil && err != io.EOF {
 		return 0, err
