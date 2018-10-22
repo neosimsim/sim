@@ -1,25 +1,4 @@
-package parse
-
-import (
-	"bufio"
-
-	"github.com/neosimsim/sim"
-)
-
-type Instruction interface{
-	Process(file sim.File, addr AddressDesc) ([]FileModification, error)
-}
-
-type Append struct {
-}
-
-func ReadAppend(reader bufio.Reader) (*Append, error) {
-	return nil, nil
-}
-
-func (append Append) Process(file sim.File, addr AddressDesc) ([]FileModification, error) {
-	return nil, nil
-}
+package lang
 
 type Insert struct {
 }
