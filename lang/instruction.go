@@ -1,8 +1,5 @@
 package lang
 
-type Change struct {
-}
-
 type Substitute struct {
 }
 

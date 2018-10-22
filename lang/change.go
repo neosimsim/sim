@@ -19,6 +19,6 @@ func ParseChange(r io.Reader) (*Change, error) {
 	}
 }
 
-func (append *Change) Process(f file.File, addr Address) ([]FileModification, error) {
+func (cmd *Change) Process(f file.File, addr Address) ([]FileModification, error) {
 	return nil, nil
 }
