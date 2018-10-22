@@ -39,9 +39,13 @@ func ParseCommand(r io.Reader) (*Command, error) {
 
 func ParseInstruction(r io.Reader) (Instruction, error) {
 	reader := NewLangReader(r)
-	cmdName, _ := reader.ReadWord()
+	cmdName, err := reader.ReadWord()
+	if err != nil {
+		return nil, err
+	}
 	switch cmdName {
 	case "a":
+		return ParseAppend(r)
 	}
 	return nil, nil
 }
