@@ -9,9 +9,6 @@ type Copy struct {
 type Move struct {
 }
 
-type Print struct {
-}
-
 type PrintLineAddress struct {
 }
 
