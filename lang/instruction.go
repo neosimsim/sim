@@ -3,9 +3,6 @@ package lang
 type Substitute struct {
 }
 
-type Delete struct {
-}
-
 type Copy struct {
 }
 
