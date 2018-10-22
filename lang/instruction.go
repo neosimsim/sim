@@ -64,7 +64,7 @@ type ChDir struct {
 }
 
 type Loop struct {
-	Regexp string
+	Regexp  string
 	Command Command
 }
 
@@ -95,4 +95,3 @@ type Undo struct {
 type Group struct {
 	Nested []Command
 }
-
