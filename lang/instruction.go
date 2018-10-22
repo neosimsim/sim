@@ -1,8 +1,5 @@
 package lang
 
-type Insert struct {
-}
-
 type Change struct {
 }
 

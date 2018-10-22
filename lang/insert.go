@@ -19,6 +19,6 @@ func ParseInsert(r io.Reader) (*Insert, error) {
 	}
 }
 
-func (append *Insert) Process(f file.File, addr Address) ([]FileModification, error) {
+func (cmd *Insert) Process(f file.File, addr Address) ([]FileModification, error) {
 	return nil, nil
 }
