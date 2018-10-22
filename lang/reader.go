@@ -122,3 +122,23 @@ func (reader *LangReader) ReadNumber() (number int, err error) {
 	}
 	return
 }
+
+func (reader *LangReader) ReadLineOrBlock() (text string, err error) {
+	delim, err := reader.ReadDelim()
+	if err != nil {
+		if err == EOL {
+			text, err = reader.ReadBlock()
+			if err != nil {
+				return "", err
+			}
+		} else {
+			return "", err
+		}
+	} else {
+		text, err = reader.ReadLineTo(delim)
+		if err != nil {
+			return "", err
+		}
+	}
+	return
+}
