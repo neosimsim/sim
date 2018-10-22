@@ -25,10 +25,16 @@ type FileModification struct {
 	Text  string
 }
 
-func Parse(r io.Reader) (*Command, error) {
-	ParseAddress(r)
-	ParseInstruction(r)
-	return nil, nil
+func ParseCommand(r io.Reader) (*Command, error) {
+	addr, err := ParseAddress(r)
+	if err != nil {
+		return nil, err
+	}
+	instr, err := ParseInstruction(r)
+	if err != nil {
+		return nil, err
+	}
+	return &Command{a1: addr, Instruction: instr}, nil
 }
 
 func ParseInstruction(r io.Reader) (Instruction, error) {
